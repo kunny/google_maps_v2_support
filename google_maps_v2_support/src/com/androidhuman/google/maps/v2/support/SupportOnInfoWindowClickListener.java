@@ -14,5 +14,5 @@ public interface SupportOnInfoWindowClickListener {
 	 * @param id Marker's id
 	 * @param marker The marker of the info window that was clicked.
 	 */
-	public void onInfoWindowClicked(int id, Marker marker);
+	public void onInfoWindowClicked(long id, Marker marker);
 }

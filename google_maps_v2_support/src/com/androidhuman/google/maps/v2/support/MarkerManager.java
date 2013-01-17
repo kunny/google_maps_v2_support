@@ -3,6 +3,8 @@ package com.androidhuman.google.maps.v2.support;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
@@ -14,11 +16,13 @@ public class MarkerManager implements OnInfoWindowClickListener{
 	
 	private GoogleMap mGoogleMap;
 	private HashMap<Long, Marker> mMarkerMap;
+	private HashMap<Marker, Long> mMarkerIdMap;
 	
 	private SupportOnInfoWindowClickListener mInfoWindowClickListener;
 	
 	public MarkerManager(){
 		mMarkerMap = new LinkedHashMap<Long, Marker>();
+		mMarkerIdMap = new LinkedHashMap<Marker, Long>();
 	}
 	
 	public MarkerManager(GoogleMap map){
@@ -46,18 +50,24 @@ public class MarkerManager implements OnInfoWindowClickListener{
 		return id;
 	}
 	
+	/**
+	 * Adds a marker to map with given marker id.
+	 * @param id Marker's id
+	 * @param options A marker options object that defines how to render the marker.
+	 */
 	public void add(long id, MarkerOptions options){
 		Marker marker = mGoogleMap.addMarker(options);
 		mMarkerMap.put(id, marker);
 	}
 	
 	public void update(long id, MarkerOptions options){
-		Marker marker = getMarker(id);
-		marker.remove();
+		Marker oldMarker = getMarker(id);
+		oldMarker.remove();
 		mMarkerMap.remove(id);
 		
 		Marker newMarker = mGoogleMap.addMarker(options);
 		mMarkerMap.put(id, newMarker);
+		updateMarkerIdRefIfNeeded(id, oldMarker, newMarker);
 	}
 	
 	public void update(long id, LatLng position){
@@ -68,6 +78,7 @@ public class MarkerManager implements OnInfoWindowClickListener{
 					.snippet(oldMarker.getSnippet())
 					.position(position)
 					.draggable(oldMarker.isDraggable()));
+		updateMarkerIdRefIfNeeded(id, oldMarker, marker);
 		oldMarker.remove();
 		mMarkerMap.remove(id);
 		mMarkerMap.put(id, marker);
@@ -81,6 +92,7 @@ public class MarkerManager implements OnInfoWindowClickListener{
 					.snippet(oldMarker.getSnippet())
 					.position(oldMarker.getPosition())
 					.draggable(oldMarker.isDraggable()));
+		updateMarkerIdRefIfNeeded(id, oldMarker, marker);
 		oldMarker.remove();
 		mMarkerMap.remove(id);
 		mMarkerMap.put(id, marker);
@@ -88,18 +100,42 @@ public class MarkerManager implements OnInfoWindowClickListener{
 	
 	public void remove(long id){
 		Marker marker = getMarker(id);
-		marker.remove();
 		mMarkerMap.remove(id);
+		mMarkerIdMap.remove(marker);
+		marker.remove();
 	}
 	
 	public void remove(Marker marker){
 		Collection<Marker> values = mMarkerMap.values();
 		for(Marker m : values){
 			if(marker.equals(m)){
-				m.remove();
 				mMarkerMap.remove(m);
+				mMarkerIdMap.remove(m);
+				m.remove();
 				break;
 			}
+		}
+	}
+	
+	private long findIdByMarker(Marker marker){
+		if(mMarkerIdMap.containsKey(marker)){
+			return mMarkerIdMap.get(marker);
+		}
+		
+		Set<Entry<Long, Marker>> entries = mMarkerMap.entrySet();
+		for(Entry<Long, Marker> entry : entries){
+			Marker m = entry.getValue();
+			if(m.equals(marker)){
+				mMarkerIdMap.put(marker, entry.getKey());
+				return entry.getKey();
+			}
+		}
+		throw new IllegalArgumentException("No id exists that mathces given marker.");
+	}
+	
+	private void updateMarkerIdRefIfNeeded(long id, Marker oldMarker, Marker newMarker){
+		if(mMarkerIdMap.remove(oldMarker)!=null){
+			mMarkerIdMap.put(newMarker, id);
 		}
 	}
 	
@@ -108,11 +144,11 @@ public class MarkerManager implements OnInfoWindowClickListener{
 		if(marker!=null){
 			return marker;
 		}else{
-			throw new IllegalArgumentException("Marker with given id+"+id+" does not exists.");
+			throw new IllegalArgumentException("Marker with given id="+id+" does not exists.");
 		}
 	}
 	
-	private int extractIdAsInt(Marker marker){
+	public int extractIdAsInt(Marker marker){
 		String markerAsString = marker.getId();
 		return Integer.parseInt(markerAsString.substring(1, markerAsString.length()));
 	}
@@ -120,7 +156,7 @@ public class MarkerManager implements OnInfoWindowClickListener{
 	@Override
 	public void onInfoWindowClick(Marker marker) {
 		if(mInfoWindowClickListener!=null){
-			int id = extractIdAsInt(marker);
+			long id = findIdByMarker(marker);
 			mInfoWindowClickListener.onInfoWindowClicked(id, marker);
 		}
 	}
