@@ -58,11 +58,14 @@ public class SupportGoogleMap implements OnCameraChangeListener{
 	
 	private GoogleMap mGoogleMap;
 	private MarkerManager mMarkerManager;
+	private PolylineManager mPolylineManager;
 	
 	private OnCameraChangeListener mCameraChangeListener;
 	
 	public SupportGoogleMap(Context context){
 		mMarkerManager = new MarkerManager();
+		mPolylineManager = new PolylineManager();
+		
 		mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 		mSharedPreferenceEditor = mSharedPreferences.edit();
 	}
@@ -76,12 +79,10 @@ public class SupportGoogleMap implements OnCameraChangeListener{
 	 * Adds an image to this map.
 	 * @param options A ground-overlay options object that defines how to render the overlay. 
 	 * Options must have an image (AnchoredBitmap) and position specified.
-	 * @return The GroundOverlay that was added to the map.
 	 * @throws IllegalArgumentException if either the image or the position is unspecified in the options.
 	 */
-	public long addGroundOverlay(GroundOverlayOptions options){
-		// TODO
-		return 0;
+	public void addGroundOverlay(GroundOverlayOptions options){
+		mGoogleMap.addGroundOverlay(options);
 	}
 
 	/**
@@ -101,19 +102,24 @@ public class SupportGoogleMap implements OnCameraChangeListener{
 		mMarkerManager.add(id, options);
 	}
 	
-	public long addPolygon(PolygonOptions options){
-		// TODO
-		return 0;
+	public void addPolygon(PolygonOptions options){
+		mGoogleMap.addPolygon(options);
 	}
 	
 	public long addPolyline(PolylineOptions options){
-		// TODO
-		return 0;
+		return mPolylineManager.add(options);
 	}
 	
-	public long addTileOverlay(TileOverlayOptions options){
-		// TODO
-		return 0;
+	public long addPolyline(LatLng... positions){
+		return mPolylineManager.add(positions);
+	}
+	
+	public void addPolyline(long id, PolylineOptions options){
+		mPolylineManager.add(id, options);
+	}
+	
+	public void addTileOverlay(TileOverlayOptions options){
+		mGoogleMap.addTileOverlay(options);
 	}
 	
 	public void animateCamera(CameraUpdate update, int durationMs, GoogleMap.CancelableCallback callback){
@@ -230,6 +236,7 @@ public class SupportGoogleMap implements OnCameraChangeListener{
 		mGoogleMap.setOnCameraChangeListener(this);
 		
 		mMarkerManager.setGoogleMap(map);
+		mPolylineManager.setGoogleMap(map);
 		
 		if(mRememberLastCamPosition){
 			float lastLatitude = mSharedPreferences.getFloat(KEY_LAST_LATITUDE, INVALID_VALUE);

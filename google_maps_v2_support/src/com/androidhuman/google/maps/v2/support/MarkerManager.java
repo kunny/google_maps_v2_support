@@ -198,6 +198,8 @@ public class MarkerManager
 	public void setGoogleMap(GoogleMap map){
 		this.mGoogleMap = map;
 		mGoogleMap.setOnInfoWindowClickListener(this);
+		mGoogleMap.setOnMarkerClickListener(this);
+		mGoogleMap.setOnMarkerDragListener(this);
 	}
 	
 	public void setOnInfoWindowClickListener(SupportOnInfoWindowClickListener listener){
