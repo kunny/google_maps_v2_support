@@ -30,15 +30,6 @@ public class MarkerManager implements OnInfoWindowClickListener{
 		setGoogleMap(map);
 	}
 	
-	public void setGoogleMap(GoogleMap map){
-		this.mGoogleMap = map;
-		mGoogleMap.setOnInfoWindowClickListener(this);
-	}
-	
-	public void setOnInfoWindowClockListener(SupportOnInfoWindowClickListener listener){
-		this.mInfoWindowClickListener = listener;
-	}
-	
 	/**
 	 * Adds a marker to map with auto-generated marker id.
 	 * @param options A marker options object that defines how to render the marker.
@@ -58,6 +49,44 @@ public class MarkerManager implements OnInfoWindowClickListener{
 	public void add(long id, MarkerOptions options){
 		Marker marker = mGoogleMap.addMarker(options);
 		mMarkerMap.put(id, marker);
+	}
+	
+	public void clear(boolean clearObjectsInMap){
+		if(clearObjectsInMap){
+			mGoogleMap.clear();
+		}
+		mMarkerMap.clear();
+		mMarkerIdMap.clear();
+	}
+	
+	public int extractIdAsInt(Marker marker){
+		String markerAsString = marker.getId();
+		return Integer.parseInt(markerAsString.substring(1, markerAsString.length()));
+	}
+	
+	private long findIdByMarker(Marker marker){
+		if(mMarkerIdMap.containsKey(marker)){
+			return mMarkerIdMap.get(marker);
+		}
+		
+		Set<Entry<Long, Marker>> entries = mMarkerMap.entrySet();
+		for(Entry<Long, Marker> entry : entries){
+			Marker m = entry.getValue();
+			if(m.equals(marker)){
+				mMarkerIdMap.put(marker, entry.getKey());
+				return entry.getKey();
+			}
+		}
+		throw new IllegalArgumentException("No id exists that mathces given marker.");
+	}
+	
+	public Marker getMarker(long id){
+		Marker marker = mMarkerMap.get(id);
+		if(marker!=null){
+			return marker;
+		}else{
+			throw new IllegalArgumentException("Marker with given id="+id+" does not exists.");
+		}
 	}
 	
 	public void update(long id, MarkerOptions options){
@@ -117,40 +146,20 @@ public class MarkerManager implements OnInfoWindowClickListener{
 		}
 	}
 	
-	private long findIdByMarker(Marker marker){
-		if(mMarkerIdMap.containsKey(marker)){
-			return mMarkerIdMap.get(marker);
-		}
-		
-		Set<Entry<Long, Marker>> entries = mMarkerMap.entrySet();
-		for(Entry<Long, Marker> entry : entries){
-			Marker m = entry.getValue();
-			if(m.equals(marker)){
-				mMarkerIdMap.put(marker, entry.getKey());
-				return entry.getKey();
-			}
-		}
-		throw new IllegalArgumentException("No id exists that mathces given marker.");
+	public void setGoogleMap(GoogleMap map){
+		this.mGoogleMap = map;
+		mGoogleMap.setOnInfoWindowClickListener(this);
 	}
 	
+	public void setOnInfoWindowClickListener(SupportOnInfoWindowClickListener listener){
+		this.mInfoWindowClickListener = listener;
+	}
+	
+
 	private void updateMarkerIdRefIfNeeded(long id, Marker oldMarker, Marker newMarker){
 		if(mMarkerIdMap.remove(oldMarker)!=null){
 			mMarkerIdMap.put(newMarker, id);
 		}
-	}
-	
-	public Marker getMarker(long id){
-		Marker marker = mMarkerMap.get(id);
-		if(marker!=null){
-			return marker;
-		}else{
-			throw new IllegalArgumentException("Marker with given id="+id+" does not exists.");
-		}
-	}
-	
-	public int extractIdAsInt(Marker marker){
-		String markerAsString = marker.getId();
-		return Integer.parseInt(markerAsString.substring(1, markerAsString.length()));
 	}
 
 	@Override
