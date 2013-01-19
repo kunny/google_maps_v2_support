@@ -54,7 +54,9 @@ public class MainActivity extends Activity{
 		case R.id.menu_add_polyline:
 			mGoogleMap.addPolyline(new PolylineOptions()
 			.color(Color.GREEN)
-			.add(new LatLng(37.422006, -122.084095), new LatLng(37.418006, -122.080095), new LatLng(37.420006, -122.084000)));
+			.add(new LatLng(37.422006, -122.084095), 
+					new LatLng(37.418006, -122.080095), 
+					new LatLng(37.420006, -122.084000)));
 			return true;
 			
 		case R.id.menu_support_add:

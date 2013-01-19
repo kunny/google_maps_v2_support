@@ -50,6 +50,8 @@ public class SupportGoogleMap implements OnCameraChangeListener{
 	private static final int INVALID_VALUE = -1000;
 	
 	private boolean mRememberLastCamPosition = true;
+	private boolean mIsInitialPositionRequested = false;
+	private boolean mIsInitialZoomLevelRequested = false;
 	
 	private SharedPreferences mSharedPreferences;
 	private SharedPreferences.Editor mSharedPreferenceEditor;
@@ -197,6 +199,17 @@ public class SupportGoogleMap implements OnCameraChangeListener{
 		mGoogleMap.setInfoWindowAdapter(adapter);
 	}
 	
+	public void setInitialCameraPosition(LatLng position){
+		mIsInitialPositionRequested = true;
+		mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(position));
+	}
+	
+	public void setInitialCameraPosition(LatLng posotion, float zoomLevel){
+		mIsInitialPositionRequested = true;
+		mIsInitialZoomLevelRequested = true;
+		mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(posotion, zoomLevel));
+	}
+	
 	public void setLocationSource(LocationSource source){
 		mGoogleMap.setLocationSource(source);
 	}
@@ -223,13 +236,14 @@ public class SupportGoogleMap implements OnCameraChangeListener{
 			float lastLongitude = mSharedPreferences.getFloat(KEY_LAST_LONGITUDE, INVALID_VALUE);
 			float lastZoom = mSharedPreferences.getFloat(KEY_LAST_ZOOM, INVALID_VALUE);
 			
-			if(lastLatitude!=INVALID_VALUE && lastLongitude!=INVALID_VALUE){
+			if(!mIsInitialPositionRequested && 
+					lastLatitude!=INVALID_VALUE && lastLongitude!=INVALID_VALUE){
 				mGoogleMap.moveCamera(
 						CameraUpdateFactory.newLatLng(
 								new LatLng(lastLatitude, lastLongitude)));
 			}
 			
-			if(lastZoom!=INVALID_VALUE){
+			if(!mIsInitialZoomLevelRequested && lastZoom!=INVALID_VALUE){
 				mGoogleMap.moveCamera(
 						CameraUpdateFactory.zoomTo(lastZoom));
 			}
@@ -260,12 +274,12 @@ public class SupportGoogleMap implements OnCameraChangeListener{
 		mGoogleMap.setOnMapLongClickListener(listener);
 	}
 	
-	public void setOnMarkerClickListener(GoogleMap.OnMarkerClickListener listener){
-		// TODO
+	public void setOnMarkerClickListener(SupportGoogleMap.SupportOnMarkerClickListener listener){
+		mMarkerManager.setOnMarkerClickListener(listener);
 	}
 	
-	public void setOnMarkerDragListener(GoogleMap.OnMarkerDragListener listener){
-		// TODO
+	public void setOnMarkerDragListener(SupportGoogleMap.SupportOnMarkerDragListener listener){
+		mMarkerManager.setOnMarkerDragListener(listener);
 	}
 	
 	public void setTrafficEnabled(boolean enabled){
@@ -288,6 +302,10 @@ public class SupportGoogleMap implements OnCameraChangeListener{
 		mMarkerManager.update(id, title);
 	}
 	
+	public void updateMarker(long id, String title, String snippet){
+		mMarkerManager.update(id, title, snippet);
+	}
+	
 	public void removeMarker(long id){
 		mMarkerManager.remove(id);
 	}
@@ -307,6 +325,52 @@ public class SupportGoogleMap implements OnCameraChangeListener{
 		if(mCameraChangeListener!=null){
 			mCameraChangeListener.onCameraChange(position);
 		}
+	}
+	
+	/**
+	 * Callback interface for click/tap events on a marker's info window.
+	 * @author Taeho Kim
+	 */
+	public interface SupportOnInfoWindowClickListener {
+		
+		/**
+		 * Called when the marker's info window is clicked.
+		 * @param id Marker's id
+		 * @param marker The marker of the info window that was clicked.
+		 */
+		public void onInfoWindowClicked(long id, Marker marker);
+	}
+	
+	public interface SupportOnMarkerClickListener {
+		public boolean onMarkerClick(long id, Marker marker);
+	}
+	
+	public interface SupportOnMarkerDragListener{
+		/**
+		 * Called repeatedly while a marker is being dragged. 
+		 * The marker's location can be accessed via getPosition().
+		 * @param id
+		 * @param marker The marker being dragged.
+		 */
+		public void onMarkerDrag(long id, Marker marker);
+		
+		/**
+		 * Called when a marker has finished being dragged. 
+		 * The marker's location can be accessed via getPosition().
+		 * @param id
+		 * @param marker The marker being dragged.
+		 */
+		public void onMarkerDragEnd(long id, Marker marker);
+		
+		/**
+		 * Called when a marker starts being dragged. 
+		 * The marker's location can be accessed via getPosition(); 
+		 * this position may be different to the position prior to the 
+		 * start of the drag because the marker is popped up above the touch point.
+		 * @param id
+		 * @param marker THe marker being dragged.
+		 */
+		public void onMarkerDragStart(long id, Marker marker);
 	}
 	
 }
