@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_add_marker"
+        android:showAsAction="never"
+        android:title="Add marker"/>
+    <item android:id="@+id/menu_add_polyline" android:title="Add polyline"></item>
+    <item android:id="@+id/menu_support_add" android:title="Add marker(via supplib)"></item><item android:id="@+id/menu_support_update" android:title="Update(via supplib)"></item>
+    
+
+</menu>

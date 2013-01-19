@@ -1,3 +1,18 @@
+/*
+ * Copyright 2013 Taeho Kim
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.androidhuman.google.maps.v2.support;
 
 import java.util.Collection;
@@ -95,36 +110,45 @@ public class MarkerManager implements OnInfoWindowClickListener{
 		mMarkerMap.remove(id);
 		
 		Marker newMarker = mGoogleMap.addMarker(options);
+		if(oldMarker.isInfoWindowShown()){
+			newMarker.showInfoWindow();
+		}
 		mMarkerMap.put(id, newMarker);
 		updateMarkerIdRefIfNeeded(id, oldMarker, newMarker);
 	}
 	
 	public void update(long id, LatLng position){
 		Marker oldMarker = getMarker(id);
-		Marker marker = mGoogleMap.addMarker(
+		Marker newMarker = mGoogleMap.addMarker(
 				new MarkerOptions()
 					.title(oldMarker.getTitle())
 					.snippet(oldMarker.getSnippet())
 					.position(position)
 					.draggable(oldMarker.isDraggable()));
-		updateMarkerIdRefIfNeeded(id, oldMarker, marker);
+		if(oldMarker.isInfoWindowShown()){
+			newMarker.showInfoWindow();
+		}
+		updateMarkerIdRefIfNeeded(id, oldMarker, newMarker);
 		oldMarker.remove();
 		mMarkerMap.remove(id);
-		mMarkerMap.put(id, marker);
+		mMarkerMap.put(id, newMarker);
 	}
 	
 	public void update(long id, String title){
 		Marker oldMarker = getMarker(id);
-		Marker marker = mGoogleMap.addMarker(
+		Marker newMarker = mGoogleMap.addMarker(
 				new MarkerOptions()
 					.title(title)
 					.snippet(oldMarker.getSnippet())
 					.position(oldMarker.getPosition())
 					.draggable(oldMarker.isDraggable()));
-		updateMarkerIdRefIfNeeded(id, oldMarker, marker);
+		if(oldMarker.isInfoWindowShown()){
+			newMarker.showInfoWindow();
+		}
+		updateMarkerIdRefIfNeeded(id, oldMarker, newMarker);
 		oldMarker.remove();
 		mMarkerMap.remove(id);
-		mMarkerMap.put(id, marker);
+		mMarkerMap.put(id, newMarker);
 	}
 	
 	public void remove(long id){
