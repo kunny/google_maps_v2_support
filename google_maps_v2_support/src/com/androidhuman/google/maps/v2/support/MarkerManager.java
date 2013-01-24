@@ -65,6 +65,38 @@ public class MarkerManager
 	}
 	
 	/**
+	 * Adds a marker to map with auto-generated marker id.
+	 * @param title A title of the marker
+	 * @param position Marker's position
+	 * @return The id of the marker that has added
+	 */
+	public long add(String title, LatLng position){
+		long id = mMarkerMap.size();
+		MarkerOptions options = new MarkerOptions();
+		options.position(position);
+		options.title(title);
+		add(id, options);
+		return id;
+	}
+	
+	/**
+	 * Adds a marker to map with auto-generated marker id.
+	 * @param title A title of the marker
+	 * @param snippet A snippet of the marker
+	 * @param position Marker's position
+	 * @return The id of the marker that has added
+	 */
+	public long add(String title, String snippet, LatLng position){
+		long id = mMarkerMap.size();
+		MarkerOptions options = new MarkerOptions();
+		options.position(position);
+		options.title(title);
+		options.snippet(snippet);
+		add(id, options);
+		return id;
+	}
+	
+	/**
 	 * Adds a marker to map with given marker id.
 	 * @param id Marker's id
 	 * @param options A marker options object that defines how to render the marker.

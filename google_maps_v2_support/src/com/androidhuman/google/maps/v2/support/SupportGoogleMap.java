@@ -25,7 +25,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.LocationSource;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.Projection;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
@@ -34,6 +36,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 
 /**
@@ -62,7 +65,7 @@ public class SupportGoogleMap implements OnCameraChangeListener{
 	
 	private OnCameraChangeListener mCameraChangeListener;
 	
-	public SupportGoogleMap(Context context){
+	private SupportGoogleMap(Context context){
 		mMarkerManager = new MarkerManager();
 		mPolylineManager = new PolylineManager();
 		
@@ -70,7 +73,7 @@ public class SupportGoogleMap implements OnCameraChangeListener{
 		mSharedPreferenceEditor = mSharedPreferences.edit();
 	}
 	
-	public SupportGoogleMap(Context context, GoogleMap map){
+	private SupportGoogleMap(Context context, GoogleMap map){
 		this(context);
 		setGoogleMap(map);
 	}
@@ -92,12 +95,38 @@ public class SupportGoogleMap implements OnCameraChangeListener{
 	 * If Marker.title is defined, the map shows an info box with the marker's title and snippet. 
 	 * If the marker is draggable, long-clicking and then dragging the marker moves it.
 	 * @param options A marker options object that defines how to render the marker.
-	 * @return The id of the marker that has added
+	 * @return The id of the marker that was added to map.
 	 */
 	public long addMarker(MarkerOptions options){
 		return mMarkerManager.add(options);
 	}
 	
+	/**
+	 * Adds a marker to map with auto-generated marker id.
+	 * @param title A title of the marker
+	 * @param position Marker's position
+	 * @return The id of the marker that has added
+	 */
+	public long addMarker(String title, LatLng position){
+		return mMarkerManager.add(title, position);
+	}
+	
+	/**
+	 * Adds a marker to map with auto-generated marker id.
+	 * @param title A title of the marker
+	 * @param snippet A snippet of the marker
+	 * @param position Marker's position
+	 * @return The id of the marker that has added
+	 */
+	public long addMarker(String title, String snippet, LatLng position){
+		return mMarkerManager.add(title, snippet, position);
+	}
+	
+	/**
+	 * Adds a marker to map with given marker id.
+	 * @param id Marker's id
+	 * @param options A marker options object that defines how to render the marker.
+	 */
 	public void addMarker(long id, MarkerOptions options){
 		mMarkerManager.add(id, options);
 	}
@@ -106,39 +135,104 @@ public class SupportGoogleMap implements OnCameraChangeListener{
 		mGoogleMap.addPolygon(options);
 	}
 	
+	/**
+	 * Adds a polyline to this map.
+	 * @param options A polyline options object that defines how to render the Polyline.
+	 * @return The id of the polyline that was added to map.
+	 */
 	public long addPolyline(PolylineOptions options){
 		return mPolylineManager.add(options);
 	}
 	
-	public long addPolyline(LatLng... positions){
-		return mPolylineManager.add(positions);
+	/**
+	 * Adds a polyline to this map.
+	 * @param points Array of positions composing polyline
+	 * @return The id of the polyline that was added to map.
+	 */
+	public long addPolyline(LatLng... points){
+		return mPolylineManager.add(points);
 	}
 	
+	/**
+	 * Adds a polyline to this map with given polyline id.
+	 * @param id Polyline's id
+	 * @param options A polyline options object that defines how to render the Polyline.
+	 */
 	public void addPolyline(long id, PolylineOptions options){
 		mPolylineManager.add(id, options);
 	}
 	
-	public void addTileOverlay(TileOverlayOptions options){
-		mGoogleMap.addTileOverlay(options);
+	/**
+	 * Adds a tile overlay to this map. See TileOverlay for more information.<p>
+	 * Note that unlike other overlays, if the map is recreated, tile overlays are not 
+	 * automatically restored and must be re-added manually.
+	 * @param options A tile-overlay options object that defines how to render the overlay. 
+	 * Options must have a TileProvider specified, otherwise an IllegalArgumentException 
+	 * will be thrown.
+	 * @returns The TileOverlay that was added to the map.
+	 */
+	public TileOverlay addTileOverlay(TileOverlayOptions options){
+		return mGoogleMap.addTileOverlay(options);
 	}
 	
+	/**
+	 * Moves the map according to the update with an animation over a specified duration, 
+	 * and calls an optional callback on completion. See CameraUpdateFactory for a set of updates.
+	 * If getCameraPosition() is called during the animation, it will return the current 
+	 * location of the camera in flight.
+	 * @param update The change that should be applied to the camera.
+	 * @param durationMs The duration of the animation in milliseconds. 
+	 * This must be strictly positive, otherwise an IllegalArgumentException will be thrown.
+	 * @param callback An optional callback to be notified from the main thread 
+	 * when the animation stops. If the animation stops due to its natural completion, 
+	 * the callback will be notified with onFinish(). 
+	 * If the animation stops due to interruption by a later camera movement or a user gesture, 
+	 * onCancel() will be called. The callback should not attempt to move or animate the camera 
+	 * in its cancellation method.
+	 */
 	public void animateCamera(CameraUpdate update, int durationMs, GoogleMap.CancelableCallback callback){
 		mGoogleMap.animateCamera(update, durationMs, callback);
 	}
 	
+	/**
+	 * Animates the movement of the camera from the current position to the position defined 
+	 * in the update and calls an optional callback on completion. 
+	 * See CameraUpdateFactory for a set of updates.<p>
+	 * During the animation, a call to getCameraPosition() returns an intermediate location 
+	 * of the camera.
+	 * @param update The change that should be applied to the camera.
+	 * @param callback The callback to invoke from the main thread when the animation stops. 
+	 * If the animation completes normally, onFinish() is called; otherwise, onCancel() is called. 
+	 * Do not update or animate the camera from within onCancel().
+	 */
 	public void animateCamera(CameraUpdate update, GoogleMap.CancelableCallback callback){
 		mGoogleMap.animateCamera(update, callback);
 	}
 	
+	/**
+	 * Animates the movement of the camera from the current position to the position defined 
+	 * in the update. During the animation, a call to getCameraPosition() returns an intermediate 
+	 * location of the camera. <p>See CameraUpdateFactory for a set of updates.
+	 * @param update The change that should be applied to the camera.
+	 */
 	public void animateCamera(CameraUpdate update){
 		mGoogleMap.animateCamera(update);
 	}
 	
+	/**
+	 * Removes all markers, overlays, and polylines from the map.
+	 */
 	public void clear(){
 		mGoogleMap.clear();
 		mMarkerManager.clear(false);
 	}
 	
+	/**
+	 * Gets the current position of the camera.<p>
+	 * The CameraPosition returned is a snapshot of the current position, 
+	 * and will not automatically update when the camera moves.
+	 * @return The current position of the Camera.
+	 */
 	public CameraPosition getCameraPosition(){
 		return mGoogleMap.getCameraPosition();
 	}
@@ -151,14 +245,29 @@ public class SupportGoogleMap implements OnCameraChangeListener{
 		return mGoogleMap.getMapType();
 	}
 	
+	/**
+	 * Returns the maximum zoom level for the current camera position. 
+	 * This takes into account what map type is currently being used, e.g., satellite or 
+	 * terrain may have a lower max zoom level than the base map tiles.
+	 * @return The maximum zoom level available at the current camera position.
+	 */
 	public float getMaxZoomLevel(){
 		return mGoogleMap.getMaxZoomLevel();
 	}
 	
+	/**
+	 * Returns the minimum zoom level. This is the same for every location 
+	 * (unlike the maximum zoom level) but may vary between devices and map sizes.
+	 * @return The minimum zoom level available.
+	 */
 	public float getMinZoomLevel(){
 		return mGoogleMap.getMinZoomLevel();
 	}
 	
+	/**
+	 * Returns the currently displayed user location, or null if there is no location data available.
+	 * @return The currently displayed user location.
+	 */
 	public Location getMyLocation(){
 		return mGoogleMap.getMyLocation();
 	}
@@ -185,6 +294,21 @@ public class SupportGoogleMap implements OnCameraChangeListener{
 	
 	public void moveCamera(CameraUpdate update){
 		mGoogleMap.moveCamera(update);
+	}
+	
+	public static SupportGoogleMap newInstance(Context context, MapFragment mapFragment){
+		SupportGoogleMap map = new SupportGoogleMap(context, mapFragment.getMap());
+		return map;
+	}
+	
+	public static SupportGoogleMap newInstance(Context context, SupportMapFragment mapFragment){
+		SupportGoogleMap map = new SupportGoogleMap(context, mapFragment.getMap());
+		return map;
+	}
+	
+	public static SupportGoogleMap newInstance(Context context, GoogleMap map){
+		SupportGoogleMap mapInstance = new SupportGoogleMap(context, map);
+		return mapInstance;
 	}
 	
 	/**

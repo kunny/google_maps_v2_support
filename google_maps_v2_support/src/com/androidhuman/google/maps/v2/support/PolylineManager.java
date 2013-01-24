@@ -29,8 +29,8 @@ public class PolylineManager {
 		return id;
 	}
 	
-	public long add(LatLng... positions){
-		return add(new PolylineOptions().add(positions));
+	public long add(LatLng... points){
+		return add(new PolylineOptions().add(points));
 	}
 	
 	public void add(long id, PolylineOptions options){
