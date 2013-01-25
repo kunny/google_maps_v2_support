@@ -262,26 +262,41 @@ public class MarkerManager
 
 	@Override
 	public void onMarkerDrag(Marker marker) {
-		long id = findIdByMarker(marker);
-		mMarkerDragListener.onMarkerDrag(id, marker);
+		if(mMarkerDragListener!=null){
+			long id = findIdByMarker(marker);
+			mMarkerDragListener.onMarkerDrag(id, marker);
+		}
 	}
 
 	@Override
 	public void onMarkerDragEnd(Marker marker) {
-		long id = findIdByMarker(marker);
-		mMarkerDragListener.onMarkerDragEnd(id, marker);
+		if(mMarkerDragListener!=null){
+			long id = findIdByMarker(marker);
+			mMarkerDragListener.onMarkerDragEnd(id, marker);
+		}
 	}
 
 	@Override
 	public void onMarkerDragStart(Marker marker) {
-		long id = findIdByMarker(marker);
-		mMarkerDragListener.onMarkerDragStart(id, marker);
+		if(mMarkerDragListener!=null){
+			long id = findIdByMarker(marker);
+			mMarkerDragListener.onMarkerDragStart(id, marker);
+		}
 	}
 
 	@Override
 	public boolean onMarkerClick(Marker marker) {
-		long id = findIdByMarker(marker);
-		return mMarkerClickListener.onMarkerClick(id, marker);
+		if(marker.isInfoWindowShown()){
+			marker.hideInfoWindow();
+		}else{
+			marker.showInfoWindow();
+		}
+		if(mMarkerClickListener!=null){
+			long id = findIdByMarker(marker);
+			return mMarkerClickListener.onMarkerClick(id, marker);
+		}else{
+			return true;
+		}
 	}
 
 }

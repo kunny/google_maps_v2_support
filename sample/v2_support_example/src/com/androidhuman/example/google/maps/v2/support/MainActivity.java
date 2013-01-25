@@ -8,11 +8,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.androidhuman.google.maps.v2.support.SupportGoogleMap;
-import com.androidhuman.google.maps.v2.support.SupportOnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -30,7 +28,7 @@ public class MainActivity extends Activity{
 		
 		mGoogleMap = ((MapFragment)getFragmentManager().findFragmentById(R.id.map)).getMap();
 		
-		mSuppMap = new SupportGoogleMap(this, mGoogleMap);
+		mSuppMap = SupportGoogleMap.newInstance(this, mGoogleMap);
 	}
 
 	@Override

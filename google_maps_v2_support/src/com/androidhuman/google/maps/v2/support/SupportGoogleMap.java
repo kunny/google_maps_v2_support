@@ -245,6 +245,10 @@ public class SupportGoogleMap implements OnCameraChangeListener{
 		return mGoogleMap.getMapType();
 	}
 	
+	public Marker getMarker(long markerId){
+		return mMarkerManager.getMarker(markerId);
+	}
+	
 	/**
 	 * Returns the maximum zoom level for the current camera position. 
 	 * This takes into account what map type is currently being used, e.g., satellite or 
