@@ -1,4 +1,3 @@
-
 Support library for Google Maps Android API V2
 ===========
 
@@ -43,7 +42,7 @@ You can check out brief usage of `google_maps_v2_support` on API sample, which c
 ## Contacts
 ========
 Please send an e-mail to [jyte82@gmail.com](mailto:jyte82@gmail.com) for *Help request*.  
-For `Bug report`, `Opinion`, please use *Issues* menu. If you have some suggestions, bugfixes, or something by your own, please let me know via *Pull request*.
+For *Bug report* or *Opinion*, please use *Issues* menu. If you have some suggestions, bugfixes, or something by your own, please let me know via *Pull request*.
 
 ## License
 ========
