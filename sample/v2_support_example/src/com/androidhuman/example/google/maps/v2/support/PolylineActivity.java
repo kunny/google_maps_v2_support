@@ -1,0 +1,50 @@
+package com.androidhuman.example.google.maps.v2.support;
+
+import android.graphics.Color;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.view.Menu;
+import android.view.MenuItem;
+
+import com.androidhuman.google.maps.v2.support.SupportGoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+
+public class PolylineActivity extends FragmentActivity {
+
+	SupportGoogleMap mGoogleMap;
+	long polylineId = -1;
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+	    super.onCreate(savedInstanceState);
+	    setContentView(R.layout.activity_map_base);
+	    
+	    mGoogleMap = SupportGoogleMap.newInstance(getApplicationContext(), 
+	    		(SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map));
+	    
+	    polylineId = mGoogleMap.addPolyline(Color.RED,
+	    		new LatLng(37.527154,126.98204),
+	    		new LatLng(37.516806,126.907883));
+	    
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.activity_polyline, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()){
+		case R.id.menu_activity_polyline_add_polyline:
+			LatLng newPoint = new LatLng(37.483032,127.019119);
+			mGoogleMap.appendPolyline(polylineId, newPoint, true);
+			mGoogleMap.animateTo(newPoint);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+}

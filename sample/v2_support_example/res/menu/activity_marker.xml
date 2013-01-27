@@ -1,0 +1,6 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/menu_activity_marker_add" android:title="Add marker"></item><item android:id="@+id/menu_activity_marker_update_title" android:title="Update marker title"></item>
+    <item android:id="@+id/menu_activity_marker_update_position" android:title="Update marker position"></item>
+    
+
+</menu>

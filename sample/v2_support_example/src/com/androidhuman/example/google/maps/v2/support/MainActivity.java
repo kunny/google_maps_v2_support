@@ -1,76 +1,48 @@
 package com.androidhuman.example.google.maps.v2.support;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-
-import com.androidhuman.google.maps.v2.support.SupportGoogleMap;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 public class MainActivity extends Activity{
 
-	private GoogleMap mGoogleMap;
-	private SupportGoogleMap mSuppMap;
-	long markerId;
+	ListView menuList;
 	
-	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		mGoogleMap = ((MapFragment)getFragmentManager().findFragmentById(R.id.map)).getMap();
+		menuList = (ListView)findViewById(R.id.list);
+		String[] items = new String[]{"Marker", "Polyline"};
+		ArrayAdapter<String> adapter = 
+				new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
 		
-		mSuppMap = SupportGoogleMap.newInstance(this, mGoogleMap);
+		menuList.setAdapter(adapter);
+		menuList.setOnItemClickListener(new OnItemClickListener(){
+
+			@Override
+			public void onItemClick(AdapterView<?> adapter, View view, int position,
+					long id) {
+				switch(position){
+				case 0:
+					startActivity(new Intent(MainActivity.this, MarkerActivity.class));
+					break;
+					
+				case 1:
+					startActivity(new Intent(MainActivity.this, PolylineActivity.class));
+					break;
+				}
+			}
+			
+		});
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_main, menu);
-		return true;
-	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch(item.getItemId()){
-		case R.id.menu_add_marker:
-			mGoogleMap.addMarker(
-					new MarkerOptions()
-						.position(new LatLng(37.418000, -122.080000))
-						.title("Marker")
-						.snippet("Marker added by GoogleMap"));
-			return true;
-			
-		case R.id.menu_add_polyline:
-			mGoogleMap.addPolyline(new PolylineOptions()
-			.color(Color.GREEN)
-			.add(new LatLng(37.422006, -122.084095), 
-					new LatLng(37.418006, -122.080095), 
-					new LatLng(37.420006, -122.084000)));
-			return true;
-			
-		case R.id.menu_support_add:
-			markerId = mSuppMap.addMarker(new MarkerOptions()
-				.position(new LatLng(37.410006, -122.080095))
-				.title("Marker(supplib)")
-				.snippet("Marker added by supplib"));
-			return true;
-			
-		case R.id.menu_support_update:
-			mSuppMap.updateMarker(markerId, "Title changed!");
-			return true;
-		}
-			
-		//
-		return super.onOptionsItemSelected(item);
-	}
 
 }
