@@ -256,7 +256,7 @@ public class MarkerManager
 	public void onInfoWindowClick(Marker marker) {
 		if(mInfoWindowClickListener!=null){
 			long id = findIdByMarker(marker);
-			mInfoWindowClickListener.onInfoWindowClicked(id, marker);
+			mInfoWindowClickListener.onInfoWindowClick(id, marker);
 		}
 	}
 
