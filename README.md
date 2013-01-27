@@ -5,13 +5,13 @@ Support library for Google Maps Android API V2
 
 ## Features
 ========
-### Marker managing
+### Marker management
 
 * add a `Marker` with simple. By putting marker's title and position, it's done. See `SupportGoogleMap.addMarker(String title, LatLng position)`.
 * You can update the `Marker` that you was added before. Just put title, snippet, position to be updated.
 * Supports custom id assignment.
 
-### Polyline managing
+### Polyline management
 * Append a new point to existing `Polyline` with ease. See `SupportGoogleMap.appendPolyline(long, LatLng, boolean)`.
 * Supports custom id assignment
 
