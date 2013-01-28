@@ -52,5 +52,17 @@ public class SupportMarker {
 	public long getId(){
 		return id;
 	}
+	
+	public void showInfoWindow(){
+		if(marker!=null){
+			marker.showInfoWindow();
+		}
+	}
+	
+	public void hideInfoWindow(){
+		if(marker!=null){
+			marker.hideInfoWindow();
+		}
+	}
 
 }
