@@ -78,7 +78,7 @@ public class SupportGoogleMap implements OnCameraChangeListener{
 		mSharedPreferenceEditor = mSharedPreferences.edit();
 	}
 	
-	private SupportGoogleMap(Context context, GoogleMap map){
+	private SupportGoogleMap(Context context, GoogleMap map) throws NoPlayServicesFoundException{
 		this(context);
 		setGoogleMap(map);
 	}
@@ -379,17 +379,17 @@ public class SupportGoogleMap implements OnCameraChangeListener{
 		mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(marker.getMarker().getPosition()));
 	}
 	
-	public static SupportGoogleMap newInstance(Context context, MapFragment mapFragment){
+	public static SupportGoogleMap newInstance(Context context, MapFragment mapFragment) throws NoPlayServicesFoundException{
 		SupportGoogleMap map = new SupportGoogleMap(context, mapFragment.getMap());
 		return map;
 	}
 	
-	public static SupportGoogleMap newInstance(Context context, SupportMapFragment mapFragment){
+	public static SupportGoogleMap newInstance(Context context, SupportMapFragment mapFragment) throws NoPlayServicesFoundException{
 		SupportGoogleMap map = new SupportGoogleMap(context, mapFragment.getMap());
 		return map;
 	}
 	
-	public static SupportGoogleMap newInstance(Context context, GoogleMap map){
+	public static SupportGoogleMap newInstance(Context context, GoogleMap map) throws NoPlayServicesFoundException{
 		SupportGoogleMap mapInstance = new SupportGoogleMap(context, map);
 		return mapInstance;
 	}
@@ -435,9 +435,9 @@ public class SupportGoogleMap implements OnCameraChangeListener{
 		mGoogleMap.setMyLocationEnabled(enabled);
 	}
 
-	public void setGoogleMap(GoogleMap map) {
+	public void setGoogleMap(GoogleMap map) throws NoPlayServicesFoundException {
 		if(map==null){
-			throw new IllegalArgumentException("GoogleMap object is null");
+			throw new NoPlayServicesFoundException();
 		}
 		mGoogleMap = map;
 		mGoogleMap.setOnCameraChangeListener(this);
