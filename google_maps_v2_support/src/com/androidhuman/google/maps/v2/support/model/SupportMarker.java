@@ -19,6 +19,7 @@ package com.androidhuman.google.maps.v2.support.model;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
+
 public class SupportMarker {
 	private static final long INVALID_ID = -1;
 	
