@@ -21,8 +21,11 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.androidhuman.google.maps.v2.support.NoPlayServicesFoundException;
 import com.androidhuman.google.maps.v2.support.SupportGoogleMap;
+import com.androidhuman.google.maps.v2.support.V2SupportUtils;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -36,8 +39,16 @@ public class PolylineActivity extends FragmentActivity {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.activity_map_base);
 	    
-	    mGoogleMap = SupportGoogleMap.newInstance(getApplicationContext(), 
-	    		(SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map));
+	    try {
+			mGoogleMap = SupportGoogleMap.newInstance(getApplicationContext(), 
+					(SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map));
+		} catch (NoPlayServicesFoundException e) {
+			e.printStackTrace();
+			Toast.makeText(getApplicationContext(), 
+					"No Google Play services found on this device. Please download from Play store.", 
+					Toast.LENGTH_SHORT).show();
+			V2SupportUtils.moveToPlayServiceDownloadPage(this);
+		}
 	    
 	    polylineId = mGoogleMap.addPolyline(Color.RED,
 	    		new LatLng(37.527154,126.98204),
