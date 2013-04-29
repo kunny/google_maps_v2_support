@@ -42,6 +42,10 @@ public class PolylineActivity extends FragmentActivity {
 	    try {
 			mGoogleMap = SupportGoogleMap.newInstance(getApplicationContext(), 
 					(SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map));
+			
+		    polylineId = mGoogleMap.addPolyline(Color.RED,
+		    		new LatLng(37.527154,126.98204),
+		    		new LatLng(37.516806,126.907883));
 		} catch (NoPlayServicesFoundException e) {
 			e.printStackTrace();
 			Toast.makeText(getApplicationContext(), 
@@ -49,10 +53,6 @@ public class PolylineActivity extends FragmentActivity {
 					Toast.LENGTH_SHORT).show();
 			V2SupportUtils.moveToPlayServiceDownloadPage(this);
 		}
-	    
-	    polylineId = mGoogleMap.addPolyline(Color.RED,
-	    		new LatLng(37.527154,126.98204),
-	    		new LatLng(37.516806,126.907883));
 	    
 	}
 
