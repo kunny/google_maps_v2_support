@@ -47,7 +47,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.androidhuman.example.google.maps.v2.support.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -55,8 +55,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="PolylineActivity"></activity>
-        <activity android:name="MarkerActivity"></activity>
+        <activity android:name=".PolylineActivity"></activity>
+        <activity android:name=".MarkerActivity"></activity>
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyAKwszubwSZkrh3-KBvZQp15JH3Pm_OE-0" />
