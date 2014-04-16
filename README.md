@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/kunny/google_maps_v2_support.svg?branch=master)](https://travis-ci.org/kunny/google_maps_v2_support)  
+
 Support library for Google Maps Android API V2
 ===========
 
