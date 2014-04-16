@@ -21,10 +21,14 @@ before_install:
   - echo yes | android update sdk --filter extra-android-m2repository --no-ui --force > /dev/null
 
   # Google play services
-  - echo yes | android update sdk --filter extra-google-google_play_services --no-ui --force
+  - echo yes | android update sdk --filter extra-google-google_play_services --no-ui --force > /dev/null
+
+  # Google Repository
+  - echo yes | android update sdk --filter extra-google-m2repository --no-ui --force > /dev/null
 
   # Android SDK Build-tools
-  - echo yes | android update sdk --filter build-tools-19.0.3 --no-ui --force 
+  - echo yes | android update sdk --all --filter build-tools-19.0.3 --no-ui --force > /dev/null
+
   # Create and start emulator
   - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
   - emulator -avd test -no-skin -no-audio -no-window &
@@ -32,7 +36,7 @@ before_install:
 before_script:
   - adb wait-for-device
   - adb shell input keyevent 82 &
+  - cd studio
 
 script:
-  - cd studio
   - ./gradlew build
