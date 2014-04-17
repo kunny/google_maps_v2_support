@@ -1,12 +1,10 @@
-[![Build Status](https://travis-ci.org/kunny/google_maps_v2_support.svg?branch=master)](https://travis-ci.org/kunny/google_maps_v2_support)  
-
+[![Build Status](https://travis-ci.org/kunny/google_maps_v2_support.svg?branch=master)](https://travis-ci.org/kunny/google_maps_v2_support)
 Support library for Google Maps Android API V2
 ===========
 
 `google_maps_v2_support` is a library to make easy use of [Google Maps Android API V2](https://developers.google.com/maps/documentation/android/). It includes several features including `Marker` and `Polyline` managing, handy changing map position, and so on.
 
 ## Features
-========
 ### Marker management
 
 * add a `Marker` with simple. By putting marker's title and position, it's done. See `SupportGoogleMap.addMarker(String title, LatLng position)`.
@@ -20,12 +18,11 @@ Support library for Google Maps Android API V2
 ### Handy camera movement
 * Supports move/animate to specific `LatLng`, `SupportMarker` position.
 
-### Automatic saving&restoring last viewpoint
+### Automatic save&restore last viewpoint
 * With `SupportGoogleMap`, it remembers your last viewing point, zoom level of the map.
 * Can be enabled/disabled by using `SupportGoogleMap.rememberAndLoadLastCameraPosotion(boolean)`.
 
 ## How do I use it?
-========
 
 1. Add `google-play-services-sdk_lib` and `google_maps_v2_support` on workspace. (File > New... > Others... > Android Project from existing code) Make sure `google_maps_v2_support` project references `google-play-services-sdk_lib` as a library.
 
@@ -38,16 +35,13 @@ Support library for Google Maps Android API V2
 5. Implement your application by using `SupportGoogleMap`-provided handy methods.
 
 ## Tutorial?
-========
 You can check out brief usage of `google_maps_v2_support` on API sample, which can be found at `sample/v2_support_sample`.
 
 ## Contacts
-========
 Please send an e-mail to [jyte82@gmail.com](mailto:jyte82@gmail.com) for *Help request*.  
-For *Bug report* or *Opinion*, please use *Issues* menu. If you have some suggestions, bugfixes, or something by your own, please let me know via *Pull request*.
+For *Bug report* or *Feature request*, please use *Issues* menu. If you have some suggestions, bugfixes, or something by your own, please let me know via *Pull request*.
 
 ## License
-========
 
     Copyright 2013 Taeho Kim (jyte82@gmail.com)
 
