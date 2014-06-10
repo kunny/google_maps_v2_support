@@ -142,7 +142,7 @@ public class MarkerManager
 				return entry.getKey();
 			}
 		}
-		throw new IllegalArgumentException("No id exists that mathces given marker.");
+		throw new IllegalArgumentException("No id exists that matches given marker.");
 	}
 	
 	public Marker getMarker(long id){
